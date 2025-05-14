@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تغيير رمز الدفع</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      overflow: hidden;
+    }
+
+    .video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 25px 20px;
+      width: 280px;
+      margin: auto;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      color: white;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .note {
+      font-size: 12px;
+      color: white;
+      margin-bottom: 15px;
+      background-color: rgba(0,0,0,0.3);
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      text-align: center;
+      letter-spacing: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .language-select {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 8px;
+      padding: 8px;
+      color: white;
+      z-index: 10;
+    }
+
+    .language-select select {
+      background: transparent;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .language-select option {
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <video autoplay muted loop class="video-bg">
+    <source src="background.mp4" type="video/mp4" />
+  </video>
+
+  <div class="language-select">
+    🌐
+    <select onchange="changeLanguage(this)">
+      <option value="ar">العربية</option>
+      <option value="en">English</option>
+      <option value="fr">Français</option>
+      <option value="zh">中文</option>
+      <option value="ur">اردو</option>
+    </select>
+  </div>
+
+  <div class="container">
+    <h2 id="title">تغيير رمز الدفع</h2>
+    <p class="note" id="note">
+      لقد تم تغيير رمز الدفع منذ 17 يوم. لتغيير الرمز قبل انتهاء 90 يوم يرجى دفع 10 USDT.
+    </p>
+    <input type="password" id="paymentCode" maxlength="6" placeholder="أدخل رمز الدفع الجديد" />
+    <button onclick="handleSubmit()" id="submitBtn">تم</button>
+  </div>
+
+  <script>
+    const texts = {
+      ar: {
+        title: "تغيير رمز الدفع",
+        note: "لقد تم تغيير رمز الدفع منذ 17 يوم. لتغيير الرمز قبل انتهاء 90 يوم يرجى دفع 10 USDT.",
+        placeholder: "أدخل رمز الدفع الجديد",
+        done: "تم",
+        emptyError: "يرجى إدخال رمز الدفع",
+        invalidError: "رمز الدفع يجب أن يتكون من 6 أرقام فقط",
+        success: "تم تحديث رمز الدفع بنجاح"
+      },
+      en: {
+        title: "Change Payment Code",
+        note: "Payment code was changed 17 days ago. To change the code before 90 days, please pay 10 USDT.",
+        placeholder: "Enter new payment code",
+        done: "Done",
+        emptyError: "Please enter the payment code",
+        invalidError: "Payment code must be exactly 6 digits",
+        success: "Payment code updated successfully"
+      },
+      fr: {
+        title: "Changer le code de paiement",
+        note: "Le code de paiement a été changé il y a 17 jours. Pour changer le code avant 90 jours, veuillez payer 10 USDT.",
+        placeholder: "Entrez le nouveau code de paiement",
+        done: "Terminé",
+        emptyError: "Veuillez entrer le code de paiement",
+        invalidError: "Le code de paiement doit comporter exactement 6 chiffres",
+        success: "Code de paiement mis à jour avec succès"
+      },
+      zh: {
+        title: "更改支付代码",
+        note: "支付代码已于17天前更改。要在90天内更改代码，请支付10 USDT。",
+        placeholder: "输入新的支付代码",
+        done: "完成",
+        emptyError: "请输入支付代码",
+        invalidError: "支付代码必须是6位数字",
+        success: "支付代码更新成功"
+      },
+      ur: {
+        title: "ادائیگی کا کوڈ تبدیل کریں",
+        note: "ادائیگی کا کوڈ 17 دن پہلے تبدیل کیا گیا تھا۔ 90 دن سے پہلے کوڈ تبدیل کرنے کے لیے براہ کرم 10 USDT ادا کریں۔",
+        placeholder: "نیا ادائیگی کوڈ درج کریں",
+        done: "ہو گیا",
+        emptyError: "براہ کرم ادائیگی کا کوڈ درج کریں",
+        invalidError: "ادائیگی کا کوڈ بالکل 6 اعداد پر مشتمل ہونا چاہیے",
+        success: "ادائیگی کا کوڈ کامیابی سے اپ ڈیٹ ہو گیا"
+      }
+    };
+
+    function changeLanguage(select) {
+      const lang = select.value;
+      localStorage.setItem("language", lang);
+      applyLanguage(lang);
+    }
+
+    function applyLanguage(lang) {
+      const t = texts[lang] || texts["ar"];
+      document.documentElement.lang = lang;
+      document.body.style.direction = ["ar", "ur"].includes(lang) ? "rtl" : "ltr";
+
+      document.getElementById("title").textContent = t.title;
+      document.getElementById("note").textContent = t.note;
+      document.getElementById("paymentCode").placeholder = t.placeholder;
+      document.getElementById("submitBtn").textContent = t.done;
+
+      document.querySelector(".language-select select").value = lang;
+    }
+
+    function handleSubmit() {
+      const lang = localStorage.getItem("language") || "ar";
+      const t = texts[lang] || texts["ar"];
+      const code = document.getElementById("paymentCode").value.trim();
+
+      if (!code) {
+        alert(t.emptyError);
+        return;
+      }
+
+      if (!/^\d{6}$/.test(code)) {
+        alert(t.invalidError);
+        return;
+      }
+
+      (t.success);
+      // إعادة التوجيه بعد 1.5 ثانية للسماح برؤية رسالة النجاح
+      setTimeout(() => {
+        window.location.href = "page8.html";
+      }, 1500);
+    }
+
+    window.onload = () => {
+      const savedLang = localStorage.getItem("language") || "ar";
+      applyLanguage(savedLang);
+    }
+  </script>
+</body>
+</html>
