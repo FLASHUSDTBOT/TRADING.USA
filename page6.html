@@ -138,7 +138,7 @@
 
     <div class="container">
       <h2 id="title">
-        <img src="Logo.png" alt="Binance Logo" id="Logo" />
+        <img src="Logo.png" />
         سحب إلى Binance
       </h2>
 
@@ -218,9 +218,9 @@
 
     // تطبيق الترجمات
     document.getElementById("title").textContent = "";
-    const logo = document.createElement("img");
+    const logo = document.createElement("png");
     logo.src = "logo.png";
-    logo.alt = "Binance Logo";
+    logo.alt = "";
     logo.id = "logo";
     document.getElementById("title").appendChild(logo);
     document.getElementById("title").appendChild(document.createTextNode(" " + t.title));
@@ -280,7 +280,7 @@
 
     function verifyPaymentCode() {
       const enteredCode = paymentCodeInput.value.trim();
-      const correctCode = "123456";
+      const correctCode = "1978889977899987";
 
       if (enteredCode === correctCode) {
         statusMsg.style.color = "lightgreen";
